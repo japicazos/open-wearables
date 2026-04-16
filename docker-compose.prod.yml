@@ -51,6 +51,7 @@ services:
     environment:
       - DB_HOST=db
       - REDIS_HOST=redis
+      - REDIS_PORT=${REDIS_PORT:-6379}
     volumes:
       - svix_secrets:/run/svix-secrets:ro
     ports:
@@ -74,6 +75,7 @@ services:
     environment:
       - DB_HOST=db
       - REDIS_HOST=redis
+      - REDIS_PORT=${REDIS_PORT:-6379}
     volumes:
       - svix_secrets:/run/svix-secrets:ro
     depends_on:
@@ -92,6 +94,7 @@ services:
     environment:
       - DB_HOST=db
       - REDIS_HOST=redis
+      - REDIS_PORT=${REDIS_PORT:-6379}
     depends_on:
       - redis
       - db
@@ -108,6 +111,7 @@ services:
     environment:
       - DB_HOST=db
       - REDIS_HOST=redis
+      - REDIS_PORT=${REDIS_PORT:-6379}
     ports:
       - "${FLOWER_PORT:-5555}:5555"
     depends_on:
@@ -120,7 +124,7 @@ services:
     container_name: redis__open-wearables
     image: redis:8
     ports:
-      - "${REDIS_PORT:-6379}:6379"
+      - "${REDIS_PORT:-6379}:${REDIS_PORT:-6379}"
     volumes:
       - redis_data:/var/lib/redis/data
     restart: unless-stopped
