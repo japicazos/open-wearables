@@ -47,7 +47,7 @@ services:
     pull_policy: never
     command: scripts/start/app.sh
     env_file:
-      - ./backend/config/.env
+      - .env
     environment:
       - DB_HOST=db
       - REDIS_HOST=redis
@@ -70,7 +70,7 @@ services:
     pull_policy: never
     command: scripts/start/worker.sh
     env_file:
-      - ./backend/config/.env
+      - .env
     environment:
       - DB_HOST=db
       - REDIS_HOST=redis
@@ -88,7 +88,7 @@ services:
     pull_policy: never
     command: scripts/start/beat.sh
     env_file:
-      - ./backend/config/.env
+      - .env
     environment:
       - DB_HOST=db
       - REDIS_HOST=redis
@@ -104,7 +104,7 @@ services:
     pull_policy: never
     command: scripts/start/flower.sh
     env_file:
-      - ./backend/config/.env
+      - .env
     environment:
       - DB_HOST=db
       - REDIS_HOST=redis
