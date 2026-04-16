@@ -15,6 +15,8 @@ services:
       retries: 5
     volumes:
       - postgres_data:/var/lib/postgresql
+    networks:
+      - open-wearables
     restart: unless-stopped
 
   db-svix-init:
@@ -33,6 +35,8 @@ services:
         fi
     volumes:
       - svix_secrets:/run/svix-secrets
+    networks:
+      - open-wearables
     depends_on:
       db:
         condition: service_healthy
@@ -51,11 +55,13 @@ services:
     environment:
       - DB_HOST=db
       - REDIS_HOST=redis
-      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PORT=6379
     volumes:
       - svix_secrets:/run/svix-secrets:ro
     ports:
       - "${APP_PORT:-8000}:8000"
+    networks:
+      - open-wearables
     depends_on:
       db:
         condition: service_healthy
@@ -75,9 +81,11 @@ services:
     environment:
       - DB_HOST=db
       - REDIS_HOST=redis
-      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PORT=6379
     volumes:
       - svix_secrets:/run/svix-secrets:ro
+    networks:
+      - open-wearables
     depends_on:
       - redis
       - db
@@ -94,7 +102,9 @@ services:
     environment:
       - DB_HOST=db
       - REDIS_HOST=redis
-      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PORT=6379
+    networks:
+      - open-wearables
     depends_on:
       - redis
       - db
@@ -111,9 +121,11 @@ services:
     environment:
       - DB_HOST=db
       - REDIS_HOST=redis
-      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PORT=6379
     ports:
       - "${FLOWER_PORT:-5555}:5555"
+    networks:
+      - open-wearables
     depends_on:
       - redis
       - db
@@ -124,9 +136,11 @@ services:
     container_name: redis__open-wearables
     image: redis:8
     ports:
-      - "${REDIS_PORT:-6379}:${REDIS_PORT:-6379}"
+      - "${REDIS_PORT:-6379}:6379"
     volumes:
       - redis_data:/var/lib/redis/data
+    networks:
+      - open-wearables
     restart: unless-stopped
 
   svix-server:
@@ -149,6 +163,8 @@ services:
       - svix_secrets:/run/svix-secrets
     expose:
       - "8071"
+    networks:
+      - open-wearables
     depends_on:
       db-svix-init:
         condition: service_completed_successfully
@@ -173,9 +189,15 @@ services:
     pull_policy: never
     ports:
       - "${FRONTEND_PORT:-3000}:3000"
+    networks:
+      - open-wearables
     depends_on:
       - app
     restart: unless-stopped
+
+networks:
+  open-wearables:
+    driver: bridge
 
 volumes:
   postgres_data:
